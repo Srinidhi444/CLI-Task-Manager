@@ -48,3 +48,13 @@ func ListTasks(tasks []Task) {
 		fmt.Printf("%d. %s [%s]\n", task.ID, task.Title, status)
 	}
 }
+func CompleteTask(tasks []Task, id int) ([]Task, error) {
+	for index := range tasks {
+		if tasks[index].ID == id {
+			tasks[index].Completed = true
+			return tasks, nil
+		}
+	}
+
+	return tasks, fmt.Errorf("task with ID %d not found", id)
+}
