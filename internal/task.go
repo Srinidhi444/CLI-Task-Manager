@@ -23,7 +23,7 @@ func AddTask(tasks []Task, title string) ([]Task, error) {
 	}
 	task := Task{
 		ID:        max_id + 1,
-		Title:     title,
+		Title:     strings.TrimSpace(title),
 		Completed: false,
 	}
 	tasks = append(tasks, task)
@@ -48,13 +48,22 @@ func ListTasks(tasks []Task) {
 		fmt.Printf("%d. %s [%s]\n", task.ID, task.Title, status)
 	}
 }
-func CompleteTask(tasks []Task, id int) ([]Task, error) {
+func CompleteTask(tasks []Task, id int) error {
 	for index := range tasks {
 		if tasks[index].ID == id {
 			tasks[index].Completed = true
-			return tasks, nil
+			return nil
 		}
 	}
 
+	return fmt.Errorf("task with ID %d not found", id)
+}
+func DeleteTask(tasks []Task, id int) ([]Task, error) {
+	for index := range tasks {
+		if tasks[index].ID == id {
+			tasks = append(tasks[:index], tasks[index+1:]...)
+			return tasks, nil
+		}
+	}
 	return tasks, fmt.Errorf("task with ID %d not found", id)
 }
