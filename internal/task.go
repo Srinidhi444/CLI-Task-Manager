@@ -1,0 +1,50 @@
+package task
+
+import (
+	"fmt"
+	"strings"
+)
+
+type Task struct {
+	ID        int    `json:"id"`
+	Title     string `json:"title"`
+	Completed bool   `json:"completed"`
+}
+
+func AddTask(tasks []Task, title string) ([]Task, error) {
+	if strings.TrimSpace(title) == "" {
+		return tasks, fmt.Errorf("task title cannot be empty")
+	}
+	max_id := 0
+	for _, task := range tasks {
+		if task.ID > max_id {
+			max_id = task.ID
+		}
+	}
+	task := Task{
+		ID:        max_id + 1,
+		Title:     title,
+		Completed: false,
+	}
+	tasks = append(tasks, task)
+
+	return tasks, nil
+}
+func ListTasks(tasks []Task) {
+	if len(tasks) == 0 {
+		fmt.Println("No tasks found")
+		return
+	}
+
+	fmt.Println("Your Tasks:")
+
+	for _, task := range tasks {
+		status := "Pending"
+
+		if task.Completed {
+			status = "Completed"
+		}
+
+		fmt.Printf("%d. %s [%s]\n", task.ID, task.Title, status)
+	}
+}
